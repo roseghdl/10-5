@@ -1,23 +1,24 @@
 let cm = 0
 basic.forever(function () {
-    basic.showNumber(sonar.ping(
-    DigitalPin.P0,
-    DigitalPin.P1,
-    PingUnit.Centimeters
-    ))
+    basic.showNumber(cm)
 })
 basic.forever(function () {
-    pins.digitalWritePin(DigitalPin.P0, 0)
-    basic.pause(2)
-    pins.digitalWritePin(DigitalPin.P0, 1)
-    basic.pause(10)
-    pins.digitalWritePin(DigitalPin.P0, 0)
-    cm = pins.map(
-    pins.pulseIn(DigitalPin.P1, PulseValue.High),
-    0,
-    46473,
-    2,
-    1000
+    cm = sonar.ping(
+    DigitalPin.P1,
+    DigitalPin.P2,
+    PingUnit.Centimeters
     )
-    basic.showNumber(cm)
+    basic.pause(100)
+})
+basic.forever(function () {
+    if (cm < 10) {
+        music.playTone(262, 200)
+    } else if (cm >= 10 && cm < 30) {
+        music.playTone(262, 400)
+    } else if (cm >= 31 && cm < 70) {
+        music.playTone(262, 700)
+    } else {
+        music.stopAllSounds()
+        music.stopMelody(MelodyStopOptions.All)
+    }
 })
